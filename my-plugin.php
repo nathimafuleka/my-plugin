@@ -1,58 +1,39 @@
 <?php
 /*
-Plugin Name: My Plugin
-Plugin URI: https://bayzel.co.za/my-plugin
-Description: This is my plugin.
-Version: 1.0.0
+Plugin Name: WP Events Plugin
+Plugin URI: http://bayzel.co.za/wp-events-plugin
+Description: A plugin that creates a custom post type for events and exposes the event's meta data in the WordPress REST API
+Version: 1.0
 Author: Nkosinathi Mafuleka
-Author URI: https://bayzel.co.za
+Author URI: http://bayzel.co.za
 License: MIT
 */
 
-defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
-
-if ( ! class_exists( 'My_Plugin' ) ) {
-
-  class My_Plugin {
-
-    function __construct() {
-      add_action( 'init', array( $this, 'register_post_type' ) );
-      add_action( 'rest_api_init', array( $this, 'register_rest_fields' ) );
-    }
-
-    function register_post_type() {
-      $args = array(
+// Register the custom post type for events
+function wp_events_plugin_register_post_type() {
+    register_post_type( 'event', array(
+        'labels' => array(
+            'name' => __( 'Events' ),
+            'singular_name' => __( 'Event' )
+        ),
         'public' => true,
-        'label' => 'Books',
-        'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'custom-fields' ),
-      );
-      register_post_type( 'book', $args );
-    }
-
-    function register_rest_fields() {
-      register_rest_field( 'book',
-        'publisher',
-        array(
-          'get_callback' => array( $this, 'get_meta_data' ),
-          'update_callback' => array( $this, 'update_meta_data' ),
-          'schema' => array(
-            'description' => __( 'The name of the book\'s publisher.' ),
-            'type' => 'string',
-          ),
-        )
-      );
-    }
-
-    function get_meta_data( $object, $field_name, $request ) {
-      return get_post_meta( $object['id'], $field_name, true );
-    }
-
-    function update_meta_data( $value, $object, $field_name ) {
-      return update_post_meta( $object->ID, $field_name, $value );
-    }
-
-  }
-
-  $my_plugin = new My_Plugin();
-
+        'has_archive' => true,
+        'supports' => array( 'title', 'editor', 'thumbnail' )
+    ) );
 }
+add_action( 'init', 'wp_events_plugin_register_post_type' );
+
+// Register the custom fields for the event post type
+function wp_events_plugin_register_meta_fields() {
+    register_meta( 'post', 'event_date', array(
+        'show_in_rest' => true,
+        'single' => true,
+        'type' => 'string'
+    ) );
+    register_meta( 'post', 'event_location', array(
+        'show_in_rest' => true,
+        'single' => true,
+        'type' => 'string'
+    ) );
+}
+add_action( 'init', 'wp_events_plugin_register_meta_fields' );
