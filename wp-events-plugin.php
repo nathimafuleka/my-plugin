@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: WP Events Plugin
-Plugin URI: http://bayzel.co.za/wp-events-plugin
-Description: A plugin that creates a custom post type for events and exposes the event's meta data in the WordPress REST API
+Plugin URI: http://bayzel.co.za/wp-events-plugi
+Description: A plugin that creatnes a custom post type for events and exposes the event's meta data in the WordPress REST API
 Version: 1.0
 Author: Nkosinathi Mafuleka
 Author URI: http://bayzel.co.za
